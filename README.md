@@ -6,4 +6,38 @@ Ever wondered how much you chat on WhatsApp? Who sends the most messages? Which 
 
 ✨ Features
 
-✅ User Activity Analysis – Find the most active users in a group chat 📈✅ Word Frequency Analysis – Discover the most commonly used words 🔤✅ Emoji Statistics – See which emojis are used the most 🤩🔥✅ Sentiment Analysis – Detect the overall mood of the conversation 😃😢✅ Chat Timeline – Visualize message trends over time 📅✅ Most Active Days & Hours – Identify peak chatting times ⏰
+✅ User Activity Analysis – Find the most active users in a group chat 📈
+✅ Word Frequency Analysis – Discover the most commonly used words 🔤
+✅ Emoji Statistics – See which emojis are used the most 🤩🔥
+✅ Chat Timeline – Visualize message trends over time 📅
+✅ Most Active Days & Hours – Identify peak chatting times ⏰
+
+
+📝 How to Use
+
+1. Export your chat from WhatsApp as a .txt file (without media).
+2. Upload the file in the web app.
+3. Explore the insights using interactive graphs and visualizations!
+
+📦 Installation
+
+1.Clone the repository:
+
+git clone https://github.com/YOUR-USERNAME/whatsapp-chat-analyzer.git
+cd whatsapp-chat-analyzer
+
+2. Create a virtual environment and activate it:
+
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+
+3. Install dependencies:
+
+pip install -r requirements.txt
+
+4. Run the app:
+
+streamlit run app.py
+_________________________________________________________________________
+
+Made with ❤️ @fowzan2744
