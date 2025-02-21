@@ -1,1 +1,6 @@
 urlextract
+wordcloud
+matplotlib
+seaborn
+pandas
+Counter
