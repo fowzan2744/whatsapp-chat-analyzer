@@ -72,15 +72,40 @@ if uploaded_file is not None:
             st.header("LINKS SHARED:")
             st.title(link_shared)
 
+        
+        
+        st.title("📝 Term Significance Analysis (TF-IDF)")
+        st.markdown("""
+            Term Frequency-Inverse Document Frequency (TF-IDF) helps identify the most unique 
+            and important words for each person in the chat.
+        """)
 
+        # Perform TF-IDF analysis
+        tfidf_results, full_tfidf_df = helper.perform_tfidf_analysis(selected_user, df)
+
+        # Visualize results
+        tfidf_fig = helper.plot_tfidf_results(tfidf_results, selected_user)
+        st.pyplot(tfidf_fig)
+
+        # Show the detailed data
+        if not isinstance(full_tfidf_df, type(None)) and not full_tfidf_df.empty:
+            st.subheader("Detailed TF-IDF Scores")
+            st.markdown("""
+                This table shows the significance scores of terms in the chat. Higher scores indicate 
+                terms that are more unique to a specific user and used frequently by them.
+            """)
+            st.dataframe(full_tfidf_df.head(20), hide_index=True)
+        else:
+            st.info("Not enough data for detailed TF-IDF analysis")
+
+
+        
         st.title("Monthly Timeline")
         timeline = helper.monthly_timeline(selected_user, df)
         fig, ax = plt.subplots()
         ax.plot(timeline['time'], timeline['user_message'], color='green')
         plt.xticks(rotation='vertical')
         st.pyplot(fig)
-
-
 
         # daily timeline
         st.title("Daily Timeline")
@@ -169,5 +194,59 @@ if uploaded_file is not None:
                 st.warning("Not enough emoji data to generate a pie chart.")
 
             st.pyplot(fig)
+
+        # Add this in the if st.sidebar.button("SHOW ANALYSIS!") block
+        # After your existing analysis sections
+
+        st.title("💭 Sentiment Analysis")
+
+        # Get sentiment analysis results
+        sentiment_counts, daily_sentiment, user_sentiment, sentiment_examples, sentiment_df = helper.analyze_chat_sentiment(
+            selected_user, df)
+
+        # Display overall metrics
+        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            total_counts = sum(sentiment_counts.values()) if sentiment_counts else 1
+            positive_pct = (sentiment_counts.get('positive', 0) / total_counts * 100) if total_counts > 0 else 0
+            st.metric("Positive Messages",
+                    f"{sentiment_counts.get('positive', 0)}",
+                    f"{positive_pct:.1f}%")
+        with col2:
+            neutral_pct = (sentiment_counts.get('neutral', 0) / total_counts * 100) if total_counts > 0 else 0
+            st.metric("Neutral Messages",
+                    f"{sentiment_counts.get('neutral', 0)}",
+                    f"{neutral_pct:.1f}%")
+        with col3:
+            negative_pct = (sentiment_counts.get('negative', 0) / total_counts * 100) if total_counts > 0 else 0
+            st.metric("Negative Messages",
+                    f"{sentiment_counts.get('negative', 0)}",
+                    f"{negative_pct:.1f}%")
+
+        # Plot visualizations
+        fig_dist, fig_timeline, fig_user = helper.plot_sentiment_analysis(
+            sentiment_counts, daily_sentiment, user_sentiment)
+
+        # Display visualizations
+        st.subheader("📊 Sentiment Distribution")
+        st.pyplot(fig_dist)
+
+        st.subheader("📈 Sentiment Trends")
+        st.pyplot(fig_timeline)
+
+        if selected_user == "Overall" and fig_user is not None:
+            st.subheader("👥 User Sentiment Comparison")
+            st.pyplot(fig_user)
+
+        # Display message examples in a dataframe
+        st.subheader("Message Sentiment Analysis")
+        display_df = sentiment_df[[ 'sentiment', 'confidence','user','user_message']]
+        display_df = display_df[display_df['confidence'] > 0.6].sort_values('confidence', ascending=False)
+        display_df.columns = ['Sentiment', 'Confidence','Name', 'Message']
+        st.dataframe(display_df, hide_index=True)
+        
+        
+        
 else:
     st.info("Upload a WhatsApp chat file to start analyzing 📂")
