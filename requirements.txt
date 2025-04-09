@@ -16,4 +16,4 @@ vaderSentiment~=3.3.2
 scikit-learn==1.3.0
 scikit-learn
 nltk
-numpy
+numpy==1.25.2
